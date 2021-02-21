@@ -86,9 +86,7 @@ public class GameClientRenderer extends Renderer {
 		getWindow().setTitle("FPS: " + String.valueOf(getFramerate()).split("\\.")[0] + " (" + getFrameTimeAverageMillis() + "ms)");
 
 		//Update the scene
-		sceneHandler.update(getDeltaTime());
-
-		Log.info(firstPersonCamera.getPosition() + " " + firstPersonCamera.getPitch() + " " + firstPersonCamera.getYaw());
+		sceneHandler.update(getDeltaTimeInMillis());
 
 		//Send the frame
 		push();
