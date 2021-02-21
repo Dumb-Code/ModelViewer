@@ -1,4 +1,4 @@
 include 'terminal_velocity_engine'
 include 'studio_jar'
 project(':studio_jar').projectDir = file('terminal_velocity_engine/studio_jar')
-rootProject.name = 'TVTC'
+rootProject.name = 'Model Viewer'
