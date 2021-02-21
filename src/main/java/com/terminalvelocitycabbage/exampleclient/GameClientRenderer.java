@@ -10,6 +10,7 @@ import com.terminalvelocitycabbage.engine.client.renderer.model.Material;
 import com.terminalvelocitycabbage.engine.client.renderer.shader.ShaderHandler;
 import com.terminalvelocitycabbage.engine.client.renderer.shader.ShaderProgram;
 import com.terminalvelocitycabbage.engine.client.resources.Identifier;
+import com.terminalvelocitycabbage.engine.debug.Log;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -87,6 +88,8 @@ public class GameClientRenderer extends Renderer {
 		//Update the scene
 		sceneHandler.update(getDeltaTime());
 
+		Log.info(firstPersonCamera.getPosition() + " " + firstPersonCamera.getPitch() + " " + firstPersonCamera.getYaw());
+
 		//Send the frame
 		push();
 	}
@@ -103,12 +106,6 @@ public class GameClientRenderer extends Renderer {
 
 		shaderProgram.enable();
 
-		//Update positions of concerned lights in view space (point and spot lights)
-		List<PointLight> pointLights = sceneHandler.getActiveScene().getObjectsOfType(PointLight.class);
-		pointLights.forEach(light -> light.update(camera.getViewMatrix()));
-		List<SpotLight> spotLights = sceneHandler.getActiveScene().getObjectsOfType(SpotLight.class);
-		spotLights.forEach(light -> light.update(camera.getViewMatrix()));
-
 		//Render the current object
 		shaderProgram.createUniform("projectionMatrix");
 		shaderProgram.createUniform("modelViewMatrix");
@@ -116,8 +113,6 @@ public class GameClientRenderer extends Renderer {
 		//Lighting stuff
 		shaderProgram.createUniform("specularPower");
 		shaderProgram.createUniform("ambientLight");
-		shaderProgram.createPointLightUniforms("pointLights", pointLights.size());
-		shaderProgram.createSpotLightUniforms("spotLights", spotLights.size());
 		shaderProgram.createDirectionalLightUniform("directionalLight");
 		//Mesh materials - this should probably be handled by some sort background system
 		shaderProgram.createMaterialUniform("material");
@@ -133,10 +128,6 @@ public class GameClientRenderer extends Renderer {
 			//Lighting
 			shaderProgram.setUniform("ambientLight", new Vector3f(0.3f, 0.3f, 0.3f));
 			shaderProgram.setUniform("specularPower", 10.0f); //Reflected light intensity
-			shaderProgram.setUniform("pointLightsNum", pointLights.size());
-			pointLights.forEach(light -> shaderProgram.setUniform("pointLights", light, pointLights.indexOf(light)));
-			shaderProgram.setUniform("spotLightsNum", spotLights.size());
-			spotLights.forEach(light -> shaderProgram.setUniform("spotLights", light, spotLights.indexOf(light)));
 			shaderProgram.setUniform("directionalLight", sceneHandler.getActiveScene().objectHandler.getObject("sun"));
 			//Material stuff
 			shaderProgram.setUniform("material", gameObject.getModel().getMaterial());
