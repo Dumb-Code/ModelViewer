@@ -7,6 +7,7 @@ import com.terminalvelocitycabbage.engine.client.renderer.model.AnimatedModel;
 import com.terminalvelocitycabbage.engine.client.renderer.model.Material;
 import com.terminalvelocitycabbage.engine.client.renderer.model.Texture;
 import com.terminalvelocitycabbage.engine.client.renderer.scenes.Scene;
+import com.terminalvelocitycabbage.engine.debug.Log;
 import net.dumbcode.studio.animation.instance.ModelAnimationHandler;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -27,13 +28,24 @@ public class ExampleScene extends Scene {
 
 		//Load gerald model to a Model object from dcm file
 		AnimatedModel model = GameClient.loadModel();
+
+		//Load Animation
 		if (new File("animation.dca").exists()) {
 			model.animations.put("animation", GameClient.loadAnimation());
 			animation = true;
+		} else {
+			Log.warn("No animation found, not adding one.");
 		}
-		texture = GameClient.loadTexture();
 
-		model.setMaterial(Material.builder().texture(texture).build());
+		//Load Texture
+		if (new File("texture.png").exists()) {
+			texture = GameClient.loadTexture();
+			model.setMaterial(Material.builder().texture(texture).build());
+		} else {
+			Log.warn("No texture found, using default material");
+			model.setMaterial(Material.builder().build());
+		}
+
 		//Create a game object from the model loaded and add the game object to the list of active objects
 		ModeledGameObject modelObject = objectHandler.add("model", new ModeledGameObject(model));
 		objectHandler.getObject("model").move(0F, 0F, -30F);

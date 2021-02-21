@@ -65,11 +65,14 @@ public class GameClient extends ClientBase {
 	}
 
 	public static Texture loadTexture() {
+		File file = new File("texture.png");
 		try {
-			return new Texture(new FileInputStream("texture.png"));
-		} catch (FileNotFoundException e) {
+			FileInputStream is = new FileInputStream(file);
+			return new Texture(is);
+		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("texture not found");
 		}
+		Log.warn("texture not found");
+		return null;
 	}
 }
