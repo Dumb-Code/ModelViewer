@@ -64,7 +64,7 @@ public class ExampleScene extends Scene {
 		}
 
 		//Create some light
-		objectHandler.add("sun", new DirectionalLight(new Vector3f(-0.68f, 0.55f, 0.42f), new Vector4f(1, 1, 0.5f, 1), 1.0f));
+		objectHandler.add("sun", new DirectionalLight(new Vector3f(-0.68f, 0.55f, 0.42f), new Vector4f(1, 1, 1f, 1), 1.0f));
 	}
 
 	@Override
