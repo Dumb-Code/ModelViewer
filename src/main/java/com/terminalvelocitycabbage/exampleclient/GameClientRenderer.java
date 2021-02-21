@@ -4,16 +4,11 @@ import com.terminalvelocitycabbage.engine.client.renderer.Renderer;
 import com.terminalvelocitycabbage.engine.client.renderer.components.Camera;
 import com.terminalvelocitycabbage.engine.client.renderer.components.FirstPersonCamera;
 import com.terminalvelocitycabbage.engine.client.renderer.gameobjects.entity.ModeledGameObject;
-import com.terminalvelocitycabbage.engine.client.renderer.gameobjects.lights.PointLight;
-import com.terminalvelocitycabbage.engine.client.renderer.gameobjects.lights.SpotLight;
 import com.terminalvelocitycabbage.engine.client.renderer.model.Material;
 import com.terminalvelocitycabbage.engine.client.renderer.shader.ShaderHandler;
 import com.terminalvelocitycabbage.engine.client.renderer.shader.ShaderProgram;
 import com.terminalvelocitycabbage.engine.client.resources.Identifier;
-import com.terminalvelocitycabbage.engine.debug.Log;
 import org.joml.Vector3f;
-
-import java.util.List;
 
 import static com.terminalvelocitycabbage.engine.client.renderer.shader.Shader.Type.FRAGMENT;
 import static com.terminalvelocitycabbage.engine.client.renderer.shader.Shader.Type.VERTEX;
