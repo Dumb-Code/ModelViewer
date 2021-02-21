@@ -3,6 +3,7 @@ package com.terminalvelocitycabbage.exampleclient;
 import com.terminalvelocitycabbage.engine.client.input.InputHandler;
 import com.terminalvelocitycabbage.engine.client.input.KeyBind;
 import com.terminalvelocitycabbage.engine.client.renderer.components.Window;
+import com.terminalvelocitycabbage.engine.debug.Log;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -44,8 +45,6 @@ public class GameInputHandler extends InputHandler {
 	@Override
 	public void processInput(KeyBind keyBind) {
 
-		reloadTexture = false;
-
 		//Escape closes the program by telling glfw that it should close
 		if (keyBind.equalsKeyAndAction(CLOSE)) {
 			setFocus(false);
@@ -55,6 +54,7 @@ public class GameInputHandler extends InputHandler {
 
 		if (keyBind.equalsKeyAndAction(RELOAD_TEXTURE)) {
 			reloadTexture = true;
+			Log.info("Reloading Texture...");
 		}
 
 		//Process movement inputs
