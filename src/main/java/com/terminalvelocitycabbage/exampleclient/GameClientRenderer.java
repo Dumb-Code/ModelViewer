@@ -49,12 +49,14 @@ public class GameClientRenderer extends Renderer {
 	@Override
 	public void loop() {
 		super.loop();
+
 		//Setup the frame for drawing
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//Move the camera around from client inputs
 		FirstPersonCamera firstPersonCamera = (FirstPersonCamera) sceneHandler.getActiveScene().getCamera();
 		firstPersonCamera.resetDeltas();
 		if (inputHandler.moveForward()) firstPersonCamera.queueMove(0, 0, -1);
@@ -69,21 +71,20 @@ public class GameClientRenderer extends Renderer {
 		firstPersonCamera.update(getDeltaTimeInSeconds());
 		inputHandler.resetDeltas();
 
+		//Update the texture if requested
 		if (inputHandler.reloadTexture()) {
 			((ModeledGameObject) sceneHandler.getActiveScene().objectHandler.getObject("model")).getModel().setMaterial(Material.builder().texture(GameClient.loadTexture()).build());
 			inputHandler.markReloaded();
 		}
 
-		//renderNormalsDebug(camera, viewMatrix, shaderHandler.get("normals"));
+		//Update and render the scene
+		sceneHandler.update(getDeltaTimeInMillis());
 		renderDefault(sceneHandler.getActiveScene().getCamera(), shaderHandler.get("default"));
 
-		//Since the text rendering is so awful I'm just going to use the window title for now
+		//Update the window title with current framerate
 		getWindow().setTitle("FPS: " + String.valueOf(getFramerate()).split("\\.")[0] + " (" + getFrameTimeAverageMillis() + "ms)");
 
-		//Update the scene
-		sceneHandler.update(getDeltaTimeInMillis());
-
-		//Send the frame
+		//Send the frame to the GPU
 		push();
 	}
 
@@ -99,22 +100,24 @@ public class GameClientRenderer extends Renderer {
 
 		shaderProgram.enable();
 
-		//Render the current object
+		//Setup Shader Uniforms for the camera and objects
 		shaderProgram.createUniform("projectionMatrix");
 		shaderProgram.createUniform("modelViewMatrix");
 		shaderProgram.createUniform("normalTransformationMatrix");
-		//Lighting stuff
+		//Setup Shader Uniforms for the lighting
 		shaderProgram.createUniform("specularPower");
 		shaderProgram.createUniform("ambientLight");
 		shaderProgram.createDirectionalLightUniform("directionalLight");
-		//Mesh materials - this should probably be handled by some sort background system
+		//Setup Shader Uniform for the material
 		shaderProgram.createMaterialUniform("material");
 
 		//Draw whatever changes were pushed
 		for (ModeledGameObject gameObject : sceneHandler.getActiveScene().getObjectsOfType(ModeledGameObject.class)) {
 
+			//Update the game object
 			gameObject.update();
 
+			//View
 			shaderProgram.setUniform("projectionMatrix", camera.getProjectionMatrix());
 			shaderProgram.setUniform("modelViewMatrix", gameObject.getModelViewMatrix(camera.getViewMatrix()));
 			shaderProgram.setUniform("normalTransformationMatrix", gameObject.getTransformationMatrix());
@@ -122,9 +125,10 @@ public class GameClientRenderer extends Renderer {
 			shaderProgram.setUniform("ambientLight", new Vector3f(0.3f, 0.3f, 0.3f));
 			shaderProgram.setUniform("specularPower", 10.0f); //Reflected light intensity
 			shaderProgram.setUniform("directionalLight", sceneHandler.getActiveScene().objectHandler.getObject("sun"));
-			//Material stuff
+			//Material
 			shaderProgram.setUniform("material", gameObject.getModel().getMaterial());
 
+			//Render the object to the screen
 			gameObject.render();
 		}
 	}

@@ -8,6 +8,7 @@ import com.terminalvelocitycabbage.engine.client.renderer.model.Material;
 import com.terminalvelocitycabbage.engine.client.renderer.model.Texture;
 import com.terminalvelocitycabbage.engine.client.renderer.scenes.Scene;
 import com.terminalvelocitycabbage.engine.debug.Log;
+import net.dumbcode.studio.animation.events.AnimationEventRegister;
 import net.dumbcode.studio.animation.instance.ModelAnimationHandler;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -52,11 +53,12 @@ public class ExampleScene extends Scene {
 		if (animation) {
 			model.startAnimation("animation").loopForever();
 		}
-		//Add animation event listener here
-		model.handler.setSrc(modelObject);
-		//AnimationEventRegister.registerEvent("event", (data, src) -> Log.info(data + ", " + src));
 
-		//bind all Game Objects
+		//Add animation event listener here and just print the data
+		model.handler.setSrc(modelObject);
+		AnimationEventRegister.registerEvent("event", (data, src) -> Log.info(data + ", " + src));
+
+		//Bind all GameObjects
 		for (ModeledGameObject gameObject : objectHandler.getAllOfType(ModeledGameObject.class)) {
 			gameObject.bind();
 		}
@@ -79,7 +81,6 @@ public class ExampleScene extends Scene {
 
 	@Override
 	public void destroy() {
-		//Cleanup
 		for (ModeledGameObject gameObject : objectHandler.getAllOfType(ModeledGameObject.class)) {
 			gameObject.destroy();
 		}
