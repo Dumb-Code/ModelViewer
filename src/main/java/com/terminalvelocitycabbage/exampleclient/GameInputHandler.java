@@ -3,7 +3,6 @@ package com.terminalvelocitycabbage.exampleclient;
 import com.terminalvelocitycabbage.engine.client.input.InputHandler;
 import com.terminalvelocitycabbage.engine.client.input.KeyBind;
 import com.terminalvelocitycabbage.engine.client.renderer.components.Window;
-import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -12,16 +11,21 @@ public class GameInputHandler extends InputHandler {
 	public static KeyBind CLOSE;
 
 	public static KeyBind FORWARD;
+	private boolean moveForward;
 	public static KeyBind BACKWARDS;
+	private boolean moveBackward;
 	public static KeyBind LEFT;
+	private boolean moveLeft;
 	public static KeyBind RIGHT;
+	private boolean moveRight;
 	public static KeyBind UP;
+	private boolean moveUp;
 	public static KeyBind DOWN;
+	private boolean moveDown;
 
 	public static KeyBind RELOAD_TEXTURE;
-
-	Vector3f cameraMoveVector = new Vector3f(0);
-	boolean reloadTexture = false;
+	private boolean reloadTexture;
+	public static KeyBind FINISH_LOOPING;
 
 	@Override
 	public void init(Window window) {
@@ -33,7 +37,8 @@ public class GameInputHandler extends InputHandler {
 		RIGHT = new KeyBind(GLFW_KEY_D);
 		UP = new KeyBind(GLFW_KEY_SPACE);
 		DOWN = new KeyBind(GLFW_KEY_LEFT_SHIFT);
-		RELOAD_TEXTURE = new KeyBind(GLFW_KEY_T, KeyBind.ANY, GLFW_RELEASE, KeyBind.NONE);
+		FINISH_LOOPING = new KeyBind(GLFW_KEY_L);
+		RELOAD_TEXTURE = new KeyBind(GLFW_KEY_R, KeyBind.ANY, GLFW_RELEASE, KeyBind.NONE);
 	}
 
 	@Override
@@ -53,32 +58,43 @@ public class GameInputHandler extends InputHandler {
 		}
 
 		//Process movement inputs
-		cameraMoveVector.set(0, 0, 0);
-		if (keyBind.isKeyPressed(FORWARD)) {
-			cameraMoveVector.z--;
-		}
-		if (keyBind.isKeyPressed(BACKWARDS)) {
-			cameraMoveVector.z++;
-		}
-		if (keyBind.isKeyPressed(LEFT)) {
-			cameraMoveVector.x--;
-		}
-		if (keyBind.isKeyPressed(RIGHT)) {
-			cameraMoveVector.x++;
-		}
-		if (keyBind.isKeyPressed(DOWN)) {
-			cameraMoveVector.y--;
-		}
-		if (keyBind.isKeyPressed(UP)) {
-			cameraMoveVector.y++;
-		}
+		moveForward = FORWARD.isKeyPressed();
+		moveBackward = BACKWARDS.isKeyPressed();
+		moveLeft = LEFT.isKeyPressed();
+		moveRight = RIGHT.isKeyPressed();
+		moveDown = DOWN.isKeyPressed();
+		moveUp = UP.isKeyPressed();
 	}
 
-	public Vector3f getCameraPositionMoveVector() {
-		return cameraMoveVector;
+	public boolean moveForward() {
+		return moveForward;
+	}
+
+	public boolean moveBackward() {
+		return moveBackward;
+	}
+
+	public boolean moveLeft() {
+		return moveLeft;
+	}
+
+	public boolean moveRight() {
+		return moveRight;
+	}
+
+	public boolean moveUp() {
+		return moveUp;
+	}
+
+	public boolean moveDown() {
+		return moveDown;
 	}
 
 	public boolean reloadTexture() {
 		return reloadTexture;
+	}
+
+	public void markReloaded() {
+		reloadTexture = false;
 	}
 }

@@ -2,15 +2,11 @@ package com.terminalvelocitycabbage.exampleclient;
 
 import com.terminalvelocitycabbage.engine.client.ClientBase;
 import com.terminalvelocitycabbage.engine.client.renderer.model.AnimatedModel;
-import com.terminalvelocitycabbage.engine.client.renderer.model.Model;
 import com.terminalvelocitycabbage.engine.client.renderer.model.Texture;
-import com.terminalvelocitycabbage.engine.client.resources.Identifier;
-import com.terminalvelocitycabbage.engine.client.resources.ResourceManager;
-import com.terminalvelocitycabbage.engine.client.state.State;
-import com.terminalvelocitycabbage.engine.client.state.StateHandler;
 import com.terminalvelocitycabbage.engine.debug.Log;
 import net.dumbcode.studio.animation.info.AnimationInfo;
 import net.dumbcode.studio.animation.info.AnimationLoader;
+import net.dumbcode.studio.model.ModelInfo;
 import net.dumbcode.studio.model.ModelLoader;
 import net.dumbcode.studio.model.RotationOrder;
 
@@ -33,14 +29,6 @@ public class GameClient extends ClientBase {
 		new GameClient();
 	}
 
-	public static GameClient getInstance() {
-		return (GameClient)instance;
-	}
-
-	public static GameClientRenderer getClientRenderer() {
-		return clientRenderer;
-	}
-
 	@Override
 	public void init() {
 		clientRenderer.init();
@@ -55,7 +43,9 @@ public class GameClient extends ClientBase {
 		File file = new File("model.dcm");
 		try {
 			InputStream is = new FileInputStream(file);
-			return new AnimatedModel(ModelLoader.loadModel(is, RotationOrder.XYZ));
+			ModelInfo modelInfo = ModelLoader.loadModel(is, RotationOrder.XYZ);
+			Log.info("TexWidth: " + modelInfo.getTextureWidth() + " TexHeight: " + modelInfo.getTextureHeight());
+			return new AnimatedModel(modelInfo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
